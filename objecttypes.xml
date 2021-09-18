@@ -8,6 +8,14 @@
   <property name="invincible_requires_status" type="string"/>
   <property name="level" type="string"/>
   <property name="number" type="string"/>
+  <property name="requires_class" type="string"/>
+  <property name="requires_currency" type="string"/>
+  <property name="requires_item" type="string"/>
+  <property name="requires_level" type="string"/>
+  <property name="requires_not_class" type="string"/>
+  <property name="requires_not_currency" type="string"/>
+  <property name="requires_not_item" type="string"/>
+  <property name="requires_not_level" type="string"/>
   <property name="requires_not_status" type="string"/>
   <property name="requires_status" type="string"/>
   <property name="wander_radius" type="string"/>
@@ -67,6 +75,14 @@
  </objecttype>
  <objecttype name="npc" color="#9f40ff">
   <property name="filename" type="string"/>
+  <property name="requires_class" type="string"/>
+  <property name="requires_currency" type="string"/>
+  <property name="requires_item" type="string"/>
+  <property name="requires_level" type="string"/>
+  <property name="requires_not_class" type="string"/>
+  <property name="requires_not_currency" type="string"/>
+  <property name="requires_not_item" type="string"/>
+  <property name="requires_not_level" type="string"/>
   <property name="requires_not_status" type="string"/>
   <property name="requires_status" type="string"/>
  </objecttype>

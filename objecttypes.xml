@@ -74,6 +74,7 @@
   <property name="unset_status" type="string"/>
  </objecttype>
  <objecttype name="npc" color="#9f40ff">
+  <property name="direction" type="string"/>
   <property name="filename" type="string"/>
   <property name="requires_class" type="string"/>
   <property name="requires_currency" type="string"/>

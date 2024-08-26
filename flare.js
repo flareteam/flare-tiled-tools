@@ -199,87 +199,85 @@ var Flare = new function() {
 
     // CLASS: Tileset definition tools
     this.TilesetDef = new function() {
-        this.tilesetDefFromMap = tiled.registerMapFormat("flare_tilesetdef_from_map", {
-            name = "Flare tileset definition files",
-            extension: "txt",
-            write: function(map, filename) {
-                let tset_img_path = tiled.prompt("Where are the tilesets images located in your mod?", "images/tilesets/", dialog_title);
-                tset_img_path = FileInfo.cleanPath(FileInfo.fromNativeSeparators(tset_img_path));
-                if (tset_img_path !=  "")
-                    tset_img_path += "/";
+        this.tilesetDefFromMap = tiled.registerAction("flare_tilesetdef_from_map", function(tilesetDefFromMap) {
+            let map = tiled.activeAsset;
+            let filename = tiled.promptSaveFile("", "Flare tileset definition files (*.txt)", "Export Flare tileset definition");
+            if (filename != "") {
+                if (map.isTileMap) {
+                    let tset_img_path = tiled.prompt("Where are the tilesets images located in your mod?", "images/tilesets/", dialog_title);
+                    tset_img_path = FileInfo.cleanPath(FileInfo.fromNativeSeparators(tset_img_path));
+                    if (tset_img_path !=  "")
+                        tset_img_path += "/";
 
-                let omit_dev_tsets = tiled.confirm("<b>(Recommended)</b> Omit tilesets with the following names?:<ul><li><i>collision</i></li><li><i>set_rules</i></li></ul>", dialog_title);
-                let textfile = new TextFile(filename, TextFile.WriteOnly);
+                    let omit_dev_tsets = tiled.confirm("<b>(Recommended)</b> Omit tilesets with the following names?:<ul><li><i>collision</i></li><li><i>set_rules</i></li></ul>", dialog_title);
+                    let textfile = new TextFile(filename, TextFile.WriteOnly);
 
-                tsets = map.tilesets;
-                for (let i = 0; i < tsets.length; i++) {
-                    if (omit_dev_tsets && (tsets[i].name == "collision" || tsets[i].name == "set_rules"))
-                        continue;
+                    tsets = map.tilesets;
+                    for (let i = 0; i < tsets.length; i++) {
+                        if (omit_dev_tsets && (tsets[i].name == "collision" || tsets[i].name == "set_rules"))
+                            continue;
+
+                        textfile.writeLine("[tileset]");
+                        let filename_tset = FileInfo.baseName(tsets[i].image) + "." + FileInfo.suffix(tsets[i].image);
+                        textfile.writeLine("img=" + tset_img_path + filename_tset);
+                        for (let j = 0; j < tsets[i].tileCount; j++) {
+                            let tile = tsets[i].tile(j);
+                            let tile_id = Flare.Utils.tileToGlobalID(map, tile);
+                            let tile_w = tsets[i].tileWidth;
+                            let tile_h = tsets[i].tileHeight;
+                            let tiles_per_row = tsets[i].imageWidth / tile_w;
+                            let left_x = (tile.id % tiles_per_row) * tile_w;
+                            let top_y = Math.floor(tile.id / tiles_per_row) * tile_h;
+                            let off_x = (map.tileWidth / 2) - tsets[i].tileOffset.x;
+                            let off_y = tile_h - (map.tileHeight / 2) - tsets[i].tileOffset.y;
+                            textfile.writeLine("tile=" + tile_id + "," + left_x + "," + top_y + "," + tile_w + "," + tile_h + "," + off_x + "," + off_y);
+                        }
+                        textfile.writeLine("");
+                    }
+
+                    textfile.commit();
+                }
+                else if (map.isTileset) {
+                    let tset_img_path = tiled.prompt("Where are the tilesets images located in your mod?", "images/tilesets/", dialog_title);
+                    tset_img_path = FileInfo.cleanPath(FileInfo.fromNativeSeparators(tset_img_path));
+                    if (tset_img_path !=  "")
+                        tset_img_path += "/";
+
+                    let map_tile_width = tset.property("map_tile_width");
+                    let map_tile_height = tset.property("map_tile_height");
+
+                    if (map_tile_width == undefined || map_tile_height == undefined) {
+                        tiled.alert("Tileset is missing the <b>map_tile_width</b> and/or <b>map_tile_height</b> custom properties. As a result, the tile x/y offsets will be set to 0. To add these custom properties:<ol><li>Select <b>Tileset</b> from the main menu.</li><li>Select <b>Tileset -> Create custom properties</b>.</li><li>Define these properties based on the <b>tile_size</b> property in your Flare mod's <u>engine/tileset_config.txt</u> file.</li></ol>", dialog_title);
+                    }
+
+                    let textfile = new TextFile(filename, TextFile.WriteOnly);
 
                     textfile.writeLine("[tileset]");
-                    let filename_tset = FileInfo.baseName(tsets[i].image) + "." + FileInfo.suffix(tsets[i].image);
+                    let filename_tset = FileInfo.baseName(tset.image) + "." + FileInfo.suffix(tset.image);
                     textfile.writeLine("img=" + tset_img_path + filename_tset);
-                    for (let j = 0; j < tsets[i].tileCount; j++) {
-                        let tile = tsets[i].tile(j);
-                        let tile_id = Flare.Utils.tileToGlobalID(map, tile);
-                        let tile_w = tsets[i].tileWidth;
-                        let tile_h = tsets[i].tileHeight;
-                        let tiles_per_row = tsets[i].imageWidth / tile_w;
+                    for (let j = 0; j < tset.tileCount; j++) {
+                        let tile = tset.tile(j);
+                        let tile_id = tile.id + 1;
+                        let tile_w = tset.tileWidth;
+                        let tile_h = tset.tileHeight;
+                        let tiles_per_row = tset.imageWidth / tile_w;
                         let left_x = (tile.id % tiles_per_row) * tile_w;
                         let top_y = Math.floor(tile.id / tiles_per_row) * tile_h;
-                        let off_x = (map.tileWidth / 2) - tsets[i].tileOffset.x;
-                        let off_y = tile_h - (map.tileHeight / 2) - tsets[i].tileOffset.y;
+                        let off_x = 0;
+                        let off_y = 0;
+                        if (map_tile_width != undefined && map_tile_height != undefined) {
+                            off_x = (map_tile_width / 2) - tset.tileOffset.x;
+                            off_y = tile_h - (map_tile_height / 2) - tset.tileOffset.y;
+                        }
                         textfile.writeLine("tile=" + tile_id + "," + left_x + "," + top_y + "," + tile_w + "," + tile_h + "," + off_x + "," + off_y);
                     }
                     textfile.writeLine("");
-                }
 
-                textfile.commit();
-            },
+                    textfile.commit();
+                }
+            }
         });
-
-        this.tilesetDefFromTileset = tiled.registerTilesetFormat("flare_tilesetdef_from_tileset", {
-            name = "Flare tileset definition files",
-            extension: "txt",
-            write: function(tset, filename) {
-                let tset_img_path = tiled.prompt("Where are the tilesets images located in your mod?", "images/tilesets/", dialog_title);
-                tset_img_path = FileInfo.cleanPath(FileInfo.fromNativeSeparators(tset_img_path));
-                if (tset_img_path !=  "")
-                    tset_img_path += "/";
-
-                let map_tile_width = tset.property("map_tile_width");
-                let map_tile_height = tset.property("map_tile_height");
-
-                if (map_tile_width == undefined || map_tile_height == undefined) {
-                    tiled.alert("Tileset is missing the <b>map_tile_width</b> and/or <b>map_tile_height</b> custom properties. As a result, the tile x/y offsets will be set to 0. To add these custom properties:<ol><li>Select <b>Tileset</b> from the main menu.</li><li>Select <b>Tileset -> Create custom properties</b>.</li><li>Define these properties based on the <b>tile_size</b> property in your Flare mod's <u>engine/tileset_config.txt</u> file.</li></ol>", dialog_title);
-                }
-
-                let textfile = new TextFile(filename, TextFile.WriteOnly);
-
-                textfile.writeLine("[tileset]");
-                let filename_tset = FileInfo.baseName(tset.image) + "." + FileInfo.suffix(tset.image);
-                textfile.writeLine("img=" + tset_img_path + filename_tset);
-                for (let j = 0; j < tset.tileCount; j++) {
-                    let tile = tset.tile(j);
-                    let tile_id = tile.id + 1;
-                    let tile_w = tset.tileWidth;
-                    let tile_h = tset.tileHeight;
-                    let tiles_per_row = tset.imageWidth / tile_w;
-                    let left_x = (tile.id % tiles_per_row) * tile_w;
-                    let top_y = Math.floor(tile.id / tiles_per_row) * tile_h;
-                    let off_x = 0;
-                    let off_y = 0;
-                    if (map_tile_width != undefined && map_tile_height != undefined) {
-                        off_x = (map_tile_width / 2) - tset.tileOffset.x;
-                        off_y = tile_h - (map_tile_height / 2) - tset.tileOffset.y;
-                    }
-                    textfile.writeLine("tile=" + tile_id + "," + left_x + "," + top_y + "," + tile_w + "," + tile_h + "," + off_x + "," + off_y);
-                }
-                textfile.writeLine("");
-
-                textfile.commit();
-            },
-        });
+        this.tilesetDefFromMap.text = menu_prefix + "Tileset -> Export";
 
         this.createProperties = tiled.registerAction("flare_tilesetdef_create_properties", function(createProperties) {
             let tset = tiled.activeAsset;
@@ -300,6 +298,10 @@ var Flare = new function() {
         tiled.extendMenu("Tileset", [
             { action: "flare_tilesetdef_create_properties", before: "TilesetProperties" },
             { separator: true }
+        ]);
+
+        tiled.extendMenu("File", [
+            { action: "flare_tilesetdef_from_map", before: "ExportAsImage" },
         ]);
     };
 };

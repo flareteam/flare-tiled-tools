@@ -29,21 +29,25 @@
   <property name="cooldown" type="string" default=""/>
   <property name="cutscene" type="string" default=""/>
   <property name="delay" type="string" default=""/>
-  <property name="hero_pos_id" type="string" default=""/>
   <property name="hotspot" type="string" default=""/>
   <property name="intermap" type="string" default=""/>
+  <property name="intermap_id" type="string" default=""/>
   <property name="intermap_random" type="string" default=""/>
   <property name="intramap" type="string" default=""/>
   <property name="loot" type="string" default=""/>
   <property name="loot_count" type="string" default=""/>
   <property name="mapmod" type="string" default=""/>
+  <property name="mapmod_toggle" type="string" default=""/>
   <property name="msg" type="string" default=""/>
   <property name="music" type="string" default=""/>
   <property name="npc" type="string" default=""/>
   <property name="parallax_layers" type="string" default=""/>
   <property name="power" type="string" default=""/>
   <property name="power_damage" type="string" default=""/>
+  <property name="power_level" type="string" default=""/>
   <property name="power_path" type="string" default=""/>
+  <property name="power_stats" type="string" default=""/>
+  <property name="procgen_door_level" type="string" default=""/>
   <property name="procgen_filename" type="string" default=""/>
   <property name="procgen_link" type="string" default=""/>
   <property name="reachable_from" type="string" default=""/>
@@ -52,7 +56,6 @@
   <property name="repeat" type="string" default=""/>
   <property name="requires_class" type="string" default=""/>
   <property name="requires_currency" type="string" default=""/>
-  <property name="requires_door_level" type="string" default=""/>
   <property name="requires_item" type="string" default=""/>
   <property name="requires_level" type="string" default=""/>
   <property name="requires_not_class" type="string" default=""/>
@@ -60,7 +63,9 @@
   <property name="requires_not_item" type="string" default=""/>
   <property name="requires_not_level" type="string" default=""/>
   <property name="requires_not_status" type="string" default=""/>
+  <property name="requires_not_tile" type="string" default=""/>
   <property name="requires_status" type="string" default=""/>
+  <property name="requires_tile" type="string" default=""/>
   <property name="respec" type="string" default=""/>
   <property name="restore" type="string" default=""/>
   <property name="reward_currency" type="string" default=""/>
@@ -74,6 +79,7 @@
   <property name="shakycam" type="string" default=""/>
   <property name="soundfx" type="string" default=""/>
   <property name="spawn" type="string" default=""/>
+  <property name="spawn_level" type="string" default=""/>
   <property name="stash" type="string" default=""/>
   <property name="tooltip" type="string" default=""/>
   <property name="unset_status" type="string" default=""/>

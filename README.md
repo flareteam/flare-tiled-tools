@@ -7,16 +7,30 @@ There are two important files:
 1. **flare.js** - A collection of functions built around Tiled's scripting API that aid in some Flare-specific tasks. It is described in more detail below.
 2. **objecttypes.xml** - Can be imported into Tiled's *Object Types Editor*. It will provide color-coding for map objects, and more importantly, will expose the available properties for map objects.
 
-## flare.js
+## Installation
 
-To use this, simply copy it Tiled's extensions folder. You can find this folder by going to the *Plugins* tab of Tiled's *Preferences* window.
+### flare.js
 
-### Features
+Copy `flare.js` to Tiled's extensions folder. You can find this folder by going to the *Plugins* tab of Tiled's *Preferences* window.
+
+Typical locations by platform:
+
+| Platform | Extensions folder |
+|----------|-------------------|
+| Linux | `~/.local/share/tiled/extensions/` |
+| macOS | `~/Library/Application Support/Tiled/extensions/` |
+| Windows | `%APPDATA%\Tiled\extensions\` |
+
+### objecttypes.xml
+
+Import `objecttypes.xml` via *View > Object Types Editor...* in Tiled, then use the *Import* button to load the file. This will color-code map objects and expose their available properties.
+
+## Features
 
 - Adds *Flare tileset definition* as an export type for both tile maps and external tilesets. This feature serves as a replacement for the old `tilesetdef-generator` tool.
 - Adds actions to the *Map* menu to easily define `mapmod` properties for event objects.
 
-### Using the mapmod feature
+## Using the mapmod feature
 
 To create a mapmod, the intended workflow looks like this:
 
@@ -27,3 +41,7 @@ To create a mapmod, the intended workflow looks like this:
 4. Select an object that has `event` as its type.
 5. Select *Flare | Mapmod -> Save layers to event object* from the *Map* menu. The `mapmod` property of the event will be updated and you will be prompted to remove the mapmod layers.
 
+## See also
+
+- [Editing Maps with Tiled](https://github.com/flareteam/flare-game/blob/master/tiled/README.md) - Map editing workflow for flare-game
+- [Flare Tileset Definition Generator](https://github.com/flareteam/tilesetdef-generator) - Older standalone tool (superseded by the export type added here)
